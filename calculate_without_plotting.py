@@ -46,9 +46,7 @@ print("done after " + str(n) + " phases")
 print("π ≈ {0}".format(π))
 PI_REDUCE = PI[: DIGITS + 1]  # let PI be the same length as π
 
-if π == PI_REDUCE:
-    print("excelent")
-else:
+if π != PI_REDUCE:
     print("Error value does not match")
     print("{0} ≠ {1}".format(π, PI_REDUCE))
 
