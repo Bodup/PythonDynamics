@@ -1,55 +1,50 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-import matplotlib.pyplot as plt
+import time
 
-plt.grid()
+PI = "3.14159265358979323846"  # hardcoded value of pi
 
-xlist = []
-ylist = []
+# computation constants
+DIGITS = 8  # digits of π to compute
+MA = 100 ** (DIGITS - 1)  # mass block A
+MB = 1  # mass block B
 
-debug = False
-D = 8  # Digits of pi to compute
-mb = 1  # Mass block B
-ma = 100**(D - 1)  # Mass block A
+# computation variables
 vb_c = 0  # Velocity block B current phase
 va_c = -1  # Velocity block A current phase
 vb_p = 0  # Velocity block B previous phase phase
 va_p = -1  # Velocity block A previous phase
+phase = 1  # phase
 
-n = 1  # Phase
-stop = False  # Stop condition
+start_time = time.time()
 
-while (stop is False):
-    xlist.append(va_c)
-    ylist.append(vb_c)
-
-    if (vb_c < 0):
+while True:
+    if vb_c < 0:
         vb_c = vb_c * -1
 
     else:
-        vb_c = (2*va_p * ma/mb + (1 - ma/mb)*vb_p) / (1 + ma/mb)
-        va_c = (2*vb_p * mb/ma + (1-mb/ma) * va_p) / (1+mb/ma)
+        vb_c = (2 * va_p * MA / MB + (1 - MA / MB) * vb_p) / (1 + MA / MB)
+        va_c = (2 * vb_p * MB / MA + (1 - MB / MA) * va_p) / (1 + MB / MA)
 
     if (vb_c >= 0) and (va_c > 0) and (vb_c < va_c):
-        stop = True
         break
-
-    if debug is True:
-        print('before ze collision')
-        print('velocity b: '+str(vb_p))
-        print('velocity a: '+str(va_p))
-
-        print('after ze collision')
-        print('velocity b: '+str(vb_c))
-        print('velocity a: '+str(va_c))
 
     # Moving current velocities into previous velocity for next phase
     vb_p = vb_c
     va_p = va_c
 
     # Next phase
-    n = n + 1
+    phase += 1
 
-print('done after '+str(n)+' phases')
+print("Done after " + str(phase) + " phases")
 
-plt.plot(xlist, ylist)
-plt.show()
+π = str(phase * 0.1 ** (DIGITS - 1))[: DIGITS + 1]  # calculated value of pi
+print("π ≈ {0}".format(π))
+PI_TRIMMED = PI[: DIGITS + 1]  # let PI be the same length as π
+
+if π != PI_TRIMMED:
+    print("Error, value does not match")
+    print("{0} ≠ {1}".format(π, PI_TRIMMED))
+
+print("Done in {0:.3} seconds".format(time.time() - start_time))
